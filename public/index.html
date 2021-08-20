@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+        <title><%= htmlWebpackPlugin.options.title %></title>
+        <!-- bootstrap & font-awesome css -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"  crossorigin="anonymous">
+        <style>
+            .nav-tabs .active {
+              color: #555;
+              cursor: default;
+              background-color: #fff;
+              border: 1px solid #ddd;
+              border-bottom-color: transparent;
+              margin-right: 10px;
+              border-radius: 4px 4px 0 0;
+              border-bottom: 0px;
+            }
+            .navbar-nav .router-link-active {
+                color:#fff !important;
+            }
+            .nav-tabs .router-link-active {
+                padding: 1px 10px 1px 10px;
+    border: 1px solid #969696cc;
+    border-bottom: 0px;
+            }
+          </style>
+    </head>
+    <body>
+        <div id="app">Loading...</div>
+        <noscript>
+            <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+        </noscript>
+    </body>
+</html>
