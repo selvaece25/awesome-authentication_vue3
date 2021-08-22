@@ -7,14 +7,14 @@ import { authGuard } from './auth-guard';
 
 
 const routes = [
-    { path: '/', component: Home },
-    { path: '/account', component: Account , beforeEnter: authGuard,
+    { path: '/', component: Home, name:'home' },
+    { path: '/account', component: Account, name:'account' , beforeEnter: authGuard,
     children: [
-        { path: 'user',  component: AccountSubPage, props: { label: 'Email id' } , beforeEnter: authGuard },
-        { path: '', component: AccountSubPage, props: { label: 'Email id'  } , beforeEnter: authGuard },
-        { path: 'profile', component: AccountSubPage, props: { label: 'Name'  } , beforeEnter: authGuard },
+        { path: 'user',  component: AccountSubPage, name:'account_user', props: { label: 'Email id' } , beforeEnter: authGuard },
+        { path: '', component: AccountSubPage , props: { label: 'Email id'  } , beforeEnter: authGuard },
+        { path: 'profile', component: AccountSubPage, name:'account_profile', props: { label: 'Name'  } , beforeEnter: authGuard },
       ] },
-    { path: '/login', component: Login },
+    { path: '/login', component: Login , name:'login'},
     { path: '/:pathMatch(.*)*', redirect: '/' }
 ];
 

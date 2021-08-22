@@ -30,7 +30,7 @@ export const ErrorHandler = (responses)=>{
           return {errMessage:  "You don't have the necessary permissions to perform this action"};
   
         case 404:
-          return { errMessage: 'User account not found'};
+          return { code: 404, errMessage: '404 code'};
   
         case 500:
           return { errMessage: 'Unable to process your request'};

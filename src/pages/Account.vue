@@ -7,6 +7,5 @@
       <router-link to="/account/profile" active-class="active" class="px-2" >Profile</router-link>
     </ul>
     <router-view></router-view>
-    <div class="tab-content"></div>
   </div>
 </template>

@@ -16,17 +16,17 @@
         </div>
       </div>
       <!-- :disabled="isButtonDisabled" -->
-      <div class="form-group" v-if="!user.isProcessing">
+      <div class="form-group" v-if="!loginState.isProcessing">
         <button :disabled="((!user.email || !user.password) || ((!user.email  &&  errors.email) || ((!user.password  &&  errors.password))))"  @click="login" class="btn btn-primary">
           Login
         </button>
       </div>
        <p v-else>Processing .....</p>
-      <div className='alert alert-danger' v-if="user.serverErrorMessage">
-          {{ user.serverErrorMessage }}
+      <div className='alert alert-danger' v-if="loginState.serverErrorMessage">
+          {{ loginState.serverErrorMessage }}
         </div>
     </form>
-    <div class="modal" :class="{ 'd-block': user.multiProfileList.length }" tabindex="-1" role="dialog">
+    <div class="modal" :class="{ 'd-block': loginState.multiProfileList.length }" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -37,7 +37,7 @@
               We found multiple profiles, so please select yours. if not found on the list <a href="#" @click="closeModal()">login again.</a>
             </p>
             <div class="list-group">
-              <a v-for="(profile) in user.multiProfileList" :key="profile.id" href="javascript:void(0)" @click="profileChange(profile)" class="list-group-item list-group-item-action">
+              <a v-for="(profile) in loginState.multiProfileList" :key="profile.id" href="javascript:void(0)" @click="profileChange(loginState.activeUser, profile.id)" class="list-group-item list-group-item-action">
                 {{ profile.name }}
               </a>
             </div>
@@ -60,45 +60,46 @@ export default {
       router.push("/account");
     }
     const defaultState = {
-      email: "",
-      password: "",
       serverErrorMessage: "",
       multiProfileList: [],
-      isProcessing: false
+      isProcessing: false,
+      activeUser:'',
     };
-    let user = reactive(defaultState);
+    let user = reactive({ email: "", password: "",});
+    let loginState = reactive(defaultState);
 
     const login = (async () => {
       try {
-        user.isProcessing = true;
+        loginState.isProcessing = true;
         resetPageDependent();
         const response = await accountService.login(user);
-        user.isProcessing = false;
-
-        const { hasError, hasZeroProfile, profiles } = response;
+        loginState.isProcessing = false;
+        const { hasError, hasZeroProfile, profiles, code, email_id } = response;
         resetForm();
-        if(hasError) {
-          user.serverErrorMessage = response.message;
-        } else if(hasZeroProfile) {
-          user.serverErrorMessage = 'There is no profile associated with this email address';
+        loginState.activeUser = email_id;
+        if(code === 404) {
+          loginState.serverErrorMessage = 'User account not found';
+        } else if (hasError) {
+          loginState.serverErrorMessage = response.message;
+        }  else if(hasZeroProfile) {
+          loginState.serverErrorMessage = 'There is no profile associated with this email address';
         } else if (profiles && profiles.length > 1) {
-          user.multiProfileList = profiles;
+          loginState.multiProfileList = profiles;
         }
         setTimeout(() => {  user.serverErrorMessage = ""; }, 1300);
         } catch (e) {
-          console.log(e);
+          user.serverErrorMessage = 'App catch eror';
         }
-      
     });
     const resetForm = () => { user.email = "";  user.password = ""; };
-    const resetPageDependent = () => { user.serverErrorMessage = ""; user.multiProfileList = []; };
-    const closeModal = () =>{ user.multiProfileList = []; };
-    const profileChange = (profile) =>{ accountService.profileSwitch(profile); }
+    const resetPageDependent = () => { loginState.serverErrorMessage = ""; loginState.multiProfileList = []; };
+    const closeModal = () =>{ loginState.multiProfileList = []; };
+    const profileChange = (email_id, id) =>{ accountService.profileSwitch(email_id, id); }
     const { validatePasswordField, validateEmailField, errors } = useFormValidation();
     const validateEmail = () => { validateEmailField("email", user.email); };
     const validatePassword= () => { validatePasswordField("password", user.password); };
 
-    return { login, closeModal, profileChange, user, errors, validateEmail, validatePassword};
+    return { login, closeModal, profileChange, user, loginState, errors, validateEmail, validatePassword};
   },
   data() {
     return {

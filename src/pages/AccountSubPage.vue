@@ -1,12 +1,13 @@
 <template>
   <div class="container mt-4">
     <h3>{{ label }}</h3>
-    <p>{{ label === 'Email id' ? account && account.user.username : account && account.profileDetails.name }}</p>
+    <p v-if="label === 'Email id'">{{  accountDetails && accountDetails.user_email  }}</p>
+    <p v-if="label !== 'Email id'">{{  accountDetails && accountDetails.user_name  }}</p>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { onMounted , reactive } from 'vue';
 import { accountService } from '@/service.js';
 
 export default {
@@ -14,9 +15,19 @@ export default {
     label: String,
   },  
     setup() {
-        const account = ref(null);
-        accountService.account.subscribe(x => account.value = x);
-        return {  account }
+      const accountDetails = reactive({user_email: '', user_name:'' });
+       async function fetchData() {
+           const result =   await accountService.getUserDetails();
+           if(result.success) {
+             accountDetails.user_email = result.user_email;
+             accountDetails.user_name = result.user_name;
+           }
+         }
+
+    onMounted(() => {
+      fetchData();
+    });
+        return {  accountDetails }
     }
 }
 </script>
