@@ -3,15 +3,15 @@
     <form @submit.prevent="onSubmit">
       <div class="form-group">
         <label for>Email</label>
-        <input type="email"  placeholder="Email" autocomplete="off" name="email" className='form-control' v-model="user.email"  @blur="validateEmail"  />
-        <div className='alert alert-danger' v-if="errors.email">
+        <input type="email"  placeholder="Email" autocomplete="off" name="email" class='form-control' v-model="user.email"  @blur="validateEmail"  />
+        <div class='alert alert-danger' v-if="errors.email">
           {{ errors.email }}
         </div>
       </div>
       <div class="form-group">
         <label for>Password</label>
-         <input type="password"  placeholder="Password" autocomplete="off" name="password" className='form-control' v-model="user.password" @blur="validatePassword"  />
-         <div className='alert alert-danger' v-if="errors.password">
+         <input type="password"  placeholder="Password" autocomplete="off" name="password" class='form-control' v-model="user.password" @blur="validatePassword"  />
+         <div class='alert alert-danger' v-if="errors.password">
           {{ errors.password }}
         </div>
       </div>
@@ -22,7 +22,7 @@
         </button>
       </div>
        <p v-else>Processing .....</p>
-      <div className='alert alert-danger' v-if="user.serverErrorMessage">
+      <div class='alert alert-danger' v-if="user.serverErrorMessage">
           {{ user.serverErrorMessage }}
         </div>
     </form>
@@ -99,14 +99,6 @@ export default {
     const validatePassword= () => { validatePasswordField("password", user.password); };
 
     return { login, closeModal, profileChange, user, errors, validateEmail, validatePassword};
-  },
-  data() {
-    return {
-      form: {
-        email: "",
-        password: ""
-      }
-    };
   },
 };
 </script>
